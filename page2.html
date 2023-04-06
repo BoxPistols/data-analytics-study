@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Other page</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link
+      rel="stylesheet"
+      href="
+  https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="script.js"></script>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a>
+    </nav>
+    <!-- Add -->
+    <main>
+      <!-- Add -->
+      <main>
+        <h1>データ分析ワーク</h1>
+
+        <table id="data-table">
+          <thead>
+            <tr>
+              <th>身長</th>
+              <th>体重</th>
+            </tr>
+          </thead>
+          <tbody id="data-body"></tbody>
+        </table>
+
+        <table id="normalized-table" style="display: none">
+          <thead>
+            <tr>
+              <th>身長 / 正規化</th>
+              <th>体重 / 正規化</th>
+            </tr>
+          </thead>
+          <tbody id="normalized-body"></tbody>
+        </table>
+
+        <button
+          class="btn btn-primary btn-sm mt-2"
+          onclick="normalizeAndToggle()"
+        >
+          正規化 切替え
+        </button>
+      </main>
+
+      <div class="block">
+        <canvas id="chart">1</canvas> <canvas id="chart2">2</canvas>
+      </div>
+
+      <script>
+        const dataset = [
+          {
+            height: 150,
+            weight: 53,
+          },
+          {
+            height: 154,
+            weight: 49,
+          },
+          {
+            height: 160,
+            weight: 55,
+          },
+          {
+            height: 164,
+            weight: 54,
+          },
+          {
+            height: 168,
+            weight: 55,
+          },
+          {
+            height: 170,
+            weight: 68,
+          },
+          {
+            height: 174,
+            weight: 57,
+          },
+          {
+            height: 180,
+            weight: 78,
+          },
+          {
+            height: 184,
+            weight: 68,
+          },
+          // ...
+        ];
+
+        // 平均、最小、最大値を計算
+        let heightSum = 0;
+        let weightSum = 0;
+        let minHeight = Infinity;
+        let maxHeight = -Infinity;
+        let minWeight = Infinity;
+        let maxWeight = -Infinity;
+
+        for (let i = 0; i < dataset.length; i++) {
+          const data = dataset[i];
+          heightSum += data.height;
+          weightSum += data.weight;
+          minHeight = Math.min(minHeight, data.height);
+          maxHeight = Math.max(maxHeight, data.height);
+          minWeight = Math.min(minWeight, data.weight);
+          maxWeight = Math.max(maxWeight, data.weight);
+        }
+
+        const heightAvg = heightSum / dataset.length;
+        const weightAvg = weightSum / dataset.length;
+
+        // チャートを作成
+        const ctx = document.getElementById('chart').getContext('2d');
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            // labels: ['Height', 'Weight'],
+            labels: ['Height'],
+            labels: ['身長'],
+            datasets: [
+              {
+                label: '最小',
+                data: [minHeight, minWeight],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+              },
+              {
+                label: '最大',
+                data: [maxHeight, maxWeight],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+              },
+              {
+                label: '平均',
+                data: [heightAvg, weightAvg],
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+        //  Chart2
+        const ctx2 = document.getElementById('chart2').getContext('2d');
+        const chart2 = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: ['体重'],
+            datasets: [
+              {
+                label: '最小',
+                data: [minWeight],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+              },
+              {
+                label: '最大',
+                data: [maxWeight],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+              },
+              {
+                label: '平均',
+                data: [weightAvg],
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+      </script>
+    </main>
+  </body>
+</html>
